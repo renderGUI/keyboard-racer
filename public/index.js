@@ -11,7 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const startButton = document.querySelector(".start-btn");
 const gameMenu = document.querySelector(".menu-container");
 const gameSession = document.querySelector(".game-container");
+const scoreScreen = document.querySelector(".score-container");
 const loadingText = document.querySelector(".loading");
+let timeText = document.querySelector("#time-left");
 let gameText = document.querySelector("#game-text");
 let output = document.querySelector("#output");
 const randomNumber = Math.ceil(Math.random() * 10);
@@ -25,22 +27,38 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
         let returnedSentence = data.sentence;
         gameText.textContent = returnedSentence;
         sentenceCharacters = returnedSentence.split("");
+        startTimer();
     }
     catch (_a) {
         loadingText.textContent = "Something went wrong!";
     }
     loadingText.classList.add("hidden");
 });
-fetchData();
 const startGame = () => {
     gameMenu.classList.add("hidden");
     gameSession.classList.remove("hidden");
+    fetchData();
+    document.addEventListener("keydown", keyboardHandler);
+};
+const startTimer = () => {
+    timeText.classList.remove("hidden");
+    let remainingTime = 30;
+    let countdown = setInterval(() => {
+        remainingTime--;
+        console.log(remainingTime);
+        timeText.textContent = remainingTime.toString();
+        if (remainingTime == 0) {
+            clearInterval(countdown);
+            endGame();
+        }
+    }, 1000);
+};
+const endGame = () => {
+    console.log("game over!");
 };
 let currentCharacterIndex = 0;
 const keyboardHandler = (e) => {
-    console.log(gameText.textContent);
     if (e.key == sentenceCharacters[currentCharacterIndex]) {
-        console.log(`Correct, you hit the letter ${e.key}`);
         document.body.style.backgroundColor = "#242424";
         output.textContent += sentenceCharacters[currentCharacterIndex];
         currentCharacterIndex++;
@@ -49,15 +67,10 @@ const keyboardHandler = (e) => {
         return;
     }
     else {
-        console.log(`Incorrect, you hit the letter ${e.key}`);
         document.body.style.backgroundColor = "#dd7777";
     }
     if (currentCharacterIndex == sentenceCharacters.length) {
         endGame();
     }
 };
-const endGame = () => {
-    console.log("game over");
-};
 startButton.addEventListener("click", startGame);
-document.addEventListener("keydown", keyboardHandler); // remember to move back inside startGame

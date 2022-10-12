@@ -1,7 +1,7 @@
 * {
   --background: #242424;
   --text: #ffffff;
-  --contrast: #8fea20;
+  --contrast: #2085ea;
 }
 
 body {
@@ -13,18 +13,40 @@ body {
 }
 
 .menu-container,
-.game-container {
+.game-container,
+.summary-container {
   display: flex;
   height: 100vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* color: var(--text); */
+}
+
+#main-heading,
+#subheading {
+  color: var(--text);
+  text-align: center;
+}
+
+#main-heading {
+  font-size: 3rem;
+  margin-bottom: 1px;
+}
+
+#subheading {
+  font-size: 1.125rem;
+  margin-top: 1px;
+  color: #515050;
 }
 
 .game-container {
   font-size: 1.875rem;
   text-align: left;
+}
+
+#time-left {
+  font-weight: 600;
+  color: var(--contrast);
 }
 
 #game-text {
@@ -48,7 +70,7 @@ body {
 
 .start-btn:hover {
   cursor: pointer;
-  background-color: #7fd11a;
+  background-color: #1976d3;
 }
 
 .hidden {
@@ -57,4 +79,28 @@ body {
 
 .loading {
   color: var(--contrast);
+}
+
+.summary-container {
+  text-align: center;
+}
+
+#score {
+  font-size: 3rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.ng-btn {
+  border: none;
+  border-radius: 25px;
+  font-size: 1.5rem;
+  color: var(--text);
+  background-color: var(--contrast);
+  transition: 0.3s ease-in-out;
+}
+
+.ng-btn:hover {
+  cursor: pointer;
+  background-color: #1976d3;
 }
