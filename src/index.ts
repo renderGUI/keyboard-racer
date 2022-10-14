@@ -14,14 +14,14 @@ const newGameButton = document.querySelector(".ng-btn") as HTMLButtonElement;
 const startGame = () => {
   gameMenu.classList.add("hidden");
   gameSession.classList.remove("hidden");
-  fetchData();
+  fetchParagraph();
 };
 startButton.addEventListener("click", startGame);
 
 let paragraphCompleted = false;
 
-let sentenceCharacters: string[] = [];
-const fetchData = async () => {
+let paragraphCharacters: string[] = [];
+const fetchParagraph = async () => {
   const randomNumber = Math.ceil(Math.random() * 10);
   loadingText.classList.remove("hidden");
   try {
@@ -29,9 +29,9 @@ const fetchData = async () => {
       `https://sentences-rendergui.herokuapp.com/sentences/${randomNumber}`
     );
     const data = await response.json();
-    let returnedSentence = data.sentence;
-    gameText.textContent = returnedSentence;
-    sentenceCharacters = returnedSentence.split("");
+    let returnedParagraph = data.sentence;
+    gameText.textContent = returnedParagraph;
+    paragraphCharacters = returnedParagraph.split("");
     document.addEventListener("keydown", keyboardHandler);
     timeText.classList.remove("hidden");
     startTimer();
@@ -46,7 +46,6 @@ let startTimer = () => {
 
   let timer = setInterval(() => {
     remainingTime--;
-    console.log(remainingTime);
     timeText.textContent = remainingTime.toString();
 
     if (remainingTime == 0 || paragraphCompleted) {
@@ -66,9 +65,9 @@ const endGame = () => {
 
 let currentCharacterIndex = 0;
 const keyboardHandler = (e: KeyboardEvent) => {
-  if (e.key == sentenceCharacters[currentCharacterIndex]) {
+  if (e.key == paragraphCharacters[currentCharacterIndex]) {
     document.body.style.backgroundColor = "#242424";
-    output.textContent += sentenceCharacters[currentCharacterIndex];
+    output.textContent += paragraphCharacters[currentCharacterIndex];
     currentCharacterIndex++;
   } else if (e.key == "CapsLock" || e.key == "Shift") {
     return;
@@ -76,7 +75,7 @@ const keyboardHandler = (e: KeyboardEvent) => {
     document.body.style.backgroundColor = "#dd7777";
   }
 
-  if (currentCharacterIndex == sentenceCharacters.length) {
+  if (currentCharacterIndex == paragraphCharacters.length) {
     paragraphCompleted = true;
     endGame();
   }

@@ -21,20 +21,20 @@ const newGameButton = document.querySelector(".ng-btn");
 const startGame = () => {
     gameMenu.classList.add("hidden");
     gameSession.classList.remove("hidden");
-    fetchData();
+    fetchParagraph();
 };
 startButton.addEventListener("click", startGame);
 let paragraphCompleted = false;
-let sentenceCharacters = [];
-const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
+let paragraphCharacters = [];
+const fetchParagraph = () => __awaiter(void 0, void 0, void 0, function* () {
     const randomNumber = Math.ceil(Math.random() * 10);
     loadingText.classList.remove("hidden");
     try {
         const response = yield fetch(`https://sentences-rendergui.herokuapp.com/sentences/${randomNumber}`);
         const data = yield response.json();
-        let returnedSentence = data.sentence;
-        gameText.textContent = returnedSentence;
-        sentenceCharacters = returnedSentence.split("");
+        let returnedParagraph = data.sentence;
+        gameText.textContent = returnedParagraph;
+        paragraphCharacters = returnedParagraph.split("");
         document.addEventListener("keydown", keyboardHandler);
         timeText.classList.remove("hidden");
         startTimer();
@@ -48,7 +48,6 @@ let startTimer = () => {
     let remainingTime = 30;
     let timer = setInterval(() => {
         remainingTime--;
-        console.log(remainingTime);
         timeText.textContent = remainingTime.toString();
         if (remainingTime == 0 || paragraphCompleted) {
             clearInterval(timer);
@@ -65,9 +64,9 @@ const endGame = () => {
 };
 let currentCharacterIndex = 0;
 const keyboardHandler = (e) => {
-    if (e.key == sentenceCharacters[currentCharacterIndex]) {
+    if (e.key == paragraphCharacters[currentCharacterIndex]) {
         document.body.style.backgroundColor = "#242424";
-        output.textContent += sentenceCharacters[currentCharacterIndex];
+        output.textContent += paragraphCharacters[currentCharacterIndex];
         currentCharacterIndex++;
     }
     else if (e.key == "CapsLock" || e.key == "Shift") {
@@ -76,7 +75,7 @@ const keyboardHandler = (e) => {
     else {
         document.body.style.backgroundColor = "#dd7777";
     }
-    if (currentCharacterIndex == sentenceCharacters.length) {
+    if (currentCharacterIndex == paragraphCharacters.length) {
         paragraphCompleted = true;
         endGame();
     }
