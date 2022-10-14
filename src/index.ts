@@ -4,15 +4,25 @@ const gameSession = document.querySelector(".game-container") as HTMLDivElement;
 const scoreScreen = document.querySelector(
   ".score-container"
 ) as HTMLDivElement;
+const score = document.querySelector("#score") as HTMLParagraphElement;
 const loadingText = document.querySelector(".loading") as HTMLParagraphElement;
 let timeText = document.querySelector("#time-left") as HTMLParagraphElement;
 let gameText = document.querySelector("#game-text") as HTMLParagraphElement;
 let output = document.querySelector("#output") as HTMLParagraphElement;
+const newGameButton = document.querySelector(".ng-btn") as HTMLButtonElement;
 
-const randomNumber = Math.ceil(Math.random() * 10);
+const startGame = () => {
+  gameMenu.classList.add("hidden");
+  gameSession.classList.remove("hidden");
+  fetchData();
+};
+startButton.addEventListener("click", startGame);
+
+let paragraphCompleted = false;
+
 let sentenceCharacters: string[] = [];
-let loading: Boolean;
 const fetchData = async () => {
+  const randomNumber = Math.ceil(Math.random() * 10);
   loadingText.classList.remove("hidden");
   try {
     const response = await fetch(
@@ -22,6 +32,8 @@ const fetchData = async () => {
     let returnedSentence = data.sentence;
     gameText.textContent = returnedSentence;
     sentenceCharacters = returnedSentence.split("");
+    document.addEventListener("keydown", keyboardHandler);
+    timeText.classList.remove("hidden");
     startTimer();
   } catch {
     loadingText.textContent = "Something went wrong!";
@@ -29,30 +41,27 @@ const fetchData = async () => {
   loadingText.classList.add("hidden");
 };
 
-const startGame = () => {
-  gameMenu.classList.add("hidden");
-  gameSession.classList.remove("hidden");
-  fetchData();
-  document.addEventListener("keydown", keyboardHandler);
-};
-
-const startTimer = () => {
-  timeText.classList.remove("hidden");
+let startTimer = () => {
   let remainingTime = 30;
-  let countdown = setInterval(() => {
+
+  let timer = setInterval(() => {
     remainingTime--;
     console.log(remainingTime);
     timeText.textContent = remainingTime.toString();
 
-    if (remainingTime == 0) {
-      clearInterval(countdown);
+    if (remainingTime == 0 || paragraphCompleted) {
+      clearInterval(timer);
       endGame();
     }
   }, 1000);
 };
 
 const endGame = () => {
-  console.log("game over!");
+  document.body.style.backgroundColor = "#242424";
+  gameSession.classList.add("hidden");
+  scoreScreen.classList.remove("hidden");
+  document.removeEventListener("keydown", keyboardHandler);
+  score.textContent = `${currentCharacterIndex * 2} CPM`;
 };
 
 let currentCharacterIndex = 0;
@@ -68,8 +77,12 @@ const keyboardHandler = (e: KeyboardEvent) => {
   }
 
   if (currentCharacterIndex == sentenceCharacters.length) {
+    paragraphCompleted = true;
     endGame();
   }
 };
 
-startButton.addEventListener("click", startGame);
+const newGame = () => {
+  location.reload();
+};
+newGameButton.addEventListener("click", newGame);

@@ -14,7 +14,7 @@ body {
 
 .menu-container,
 .game-container,
-.summary-container {
+.score-container {
   display: flex;
   height: 100vh;
   flex-direction: column;
